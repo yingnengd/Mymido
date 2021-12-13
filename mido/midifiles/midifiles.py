@@ -106,9 +106,7 @@ def read_chunk_header(infile):
 
 def read_file_header(infile):
     name, size = read_chunk_header(infile)
-    # if name != b'MThd':
-    # if not name.endswith(b'.mid'):
-    if name != b'mid':
+    if name != b'MThd':
         raise IOError('MThd not found. Probably not a MIDI file')
 
     else:

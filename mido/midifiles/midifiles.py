@@ -306,7 +306,7 @@ class MidiFile(object):
                  type=1, ticks_per_beat=DEFAULT_TICKS_PER_BEAT,
                  charset='latin1',
                  debug=False,
-                 clip=True,
+                 clip=False,
                  tracks=None
                  ):
 

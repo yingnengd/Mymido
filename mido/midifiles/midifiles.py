@@ -118,7 +118,7 @@ def read_file_header(infile):
         return struct.unpack('>hhh', data[:6])
 
 
-def read_message(infile, status_byte, peek_data, delta, clip=True):
+def read_message(infile, status_byte, peek_data, delta, clip=False):
     try:
         spec = SPEC_BY_STATUS[status_byte]
     except LookupError:
@@ -145,7 +145,7 @@ def read_message(infile, status_byte, peek_data, delta, clip=True):
     return Message.from_bytes([status_byte] + data_bytes, time=delta)
 
 
-def read_sysex(infile, delta, clip=True):
+def read_sysex(infile, delta, clip=False):
     length = read_variable_int(infile)
     data = read_bytes(infile, length)
 
@@ -179,7 +179,7 @@ def read_meta_message(infile, delta):
     return build_meta_message(meta_type, data, delta)
 
 
-def read_track(infile, debug=False, clip=True):
+def read_track(infile, debug=False, clip=False):
     track = MidiTrack()
 
     name, size = read_chunk_header(infile)
@@ -306,7 +306,7 @@ class MidiFile(object):
                  type=1, ticks_per_beat=DEFAULT_TICKS_PER_BEAT,
                  charset='latin1',
                  debug=False,
-                 clip=True,
+                 clip=False,
                  tracks=None
                  ):
 

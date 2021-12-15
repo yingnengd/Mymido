@@ -45,10 +45,10 @@ def test_single_message():
 def test_too_long_message():
     with raises(IOError):
         read_file(HEADER_ONE_TRACK + """
-            4d 54 72 6b  # MTrk
-            00 00 00 04
-            00 ff 03 ff ff 7f # extremely long track name message
-            """)
+        4d 54 72 6b  # MTrk
+        00 00 00 04
+        00 ff 03 ff ff 7f # extremely long track name message
+        """)
 
 
 def test_two_tracks():
@@ -64,6 +64,7 @@ def test_two_tracks():
 def test_empty_file():
     with raises(EOFError):
         read_file("")
+
 
 def test_eof_in_track():
     with raises(EOFError):

@@ -106,9 +106,9 @@ def read_chunk_header(infile):
 
 def read_file_header(infile):
     name, size = read_chunk_header(infile)
+
     if name != b'MThd':
         raise IOError('MThd not found. Probably not a MIDI file')
-
     else:
         data = infile.read(size)
 
@@ -127,21 +127,14 @@ def read_message(infile, status_byte, peek_data, delta, clip=False):
     # Subtract 1 for status byte.
     size = spec['length'] - 1 - len(peek_data)
     data_bytes = peek_data + read_bytes(infile, size)
-    
-    adjusted_bytes = []
-    
+
     if clip:
-        for byte in data_bytes:
-            if byte > 127:
-                adjusted_bytes.append(127)
-            else:
-                adjusted_bytes.append(byte)
-        data_bytes = adjusted_bytes
-    
+        data_bytes = [byte if byte < 127 else 127 for byte in data_bytes]
     else:
         for byte in data_bytes:
             if byte > 127:
                 raise IOError('data byte must be in range 0..127')
+
     return Message.from_bytes([status_byte] + data_bytes, time=delta)
 
 
@@ -207,7 +200,6 @@ def read_track(infile, debug=False, clip=False):
         if debug:
             _dbg('-> delta={}'.format(delta))
 
-        # TODO: not all messages have running status
         status_byte = read_byte(infile)
 
         if status_byte < 0x80:
